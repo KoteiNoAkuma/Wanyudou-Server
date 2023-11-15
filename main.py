@@ -6,27 +6,28 @@ import threading
 
 def listen():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(("127.0.0.1", 6665))
+    sock.bind(("172.16.236.21", 45678))
     sock.listen()
     print("\n\n\nOUÇA COM ATENÇÃO...TEM ALGO LÁ FORA?")
     conne, addr = sock.accept()
     with conne:
         print(f"TE OUVI!! ALI!")
-        multiThread(conne)
+        while True:
+            multiThread(conne)
 
 def receivingData(session):
-    while True:
-        data = session.recv(1024)
-        print(data.strip().decode())
+        data = session.recv(2048)
+        print(data.strip())
 
 def sendingData(session):
-    while True:
         command = input()
-        session.sendall(command.encode())
+        print(command.encode())
+        session.send(command.encode())
 
 def multiThread(session):
-    threading.Thread(target=receivingData(session)).start()
     threading.Thread(target=sendingData(session)).start()
+    threading.Thread(target=receivingData(session)).start()
+
 
 
 
